@@ -16,10 +16,11 @@ def authenticate():
     else:
         return None
 
-def get_tweets(hashtag, token):
+def get_tweets(hashtag, token, count=15):
     url = "https://api.twitter.com/1.1/search/tweets.json"
     query = hashtag
-    payload = {'q': query}
+    count = 1 < count < 100 and int(count) or 100
+    payload = {'q': query, 'count': count}
     headers = {'Authorization' : 'Bearer {}'.format(token),
                'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'}
     request = requests.get(url, params=payload, headers=headers)
