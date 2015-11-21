@@ -7,3 +7,5 @@ Hashtalyzer retrieves tweets containing a hastag and analyzes them to provides s
 - how many likes for tweets with this hashtag
 - how many users use this tag
 - how many users are mentioned within these tweets
+
+Tested on Python 3.5
