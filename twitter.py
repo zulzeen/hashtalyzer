@@ -1,5 +1,6 @@
 import base64
 import requests
+import urllib
 
 from settings import *
 
@@ -16,15 +17,29 @@ def authenticate():
     else:
         return None
 
-def get_tweets(hashtag, token, count=15):
+def get_tweets(hashtag, token, count=15, max_id='0'):
+    tweets_list = []
     url = "https://api.twitter.com/1.1/search/tweets.json"
     query = hashtag
-    count = 1 < count < 100 and int(count) or 100
-    payload = {'q': query, 'count': count}
     headers = {'Authorization' : 'Bearer {}'.format(token),
                'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'}
-    request = requests.get(url, params=payload, headers=headers)
-    return request.json()
+
+    count = count >= 1 and int(count) or 100
+    payload = {'q': query, 'count': count}
+    if max_id != '0':
+        payload.update({'max_id': max_id})
+
+    request = requests.get(url, params=payload, headers=headers).json()
+    next = request.get('search_metadata').get('next_results')
+    if next:
+        max_id = urllib.parse.parse_qs(next).get('?max_id').pop()
+    tweets_list += request.get('statuses')
+    if max_id == '0' or count <= 100:
+        return tweets_list
+    else :
+        count -= 100
+        tweets_list += get_tweets(hashtag, token, count=count, max_id=max_id)
+        return tweets_list
 
 if __name__ == "__main__":
     pass

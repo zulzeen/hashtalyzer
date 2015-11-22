@@ -16,10 +16,10 @@ if __name__ == "__main__":
     search = sys.argv[1]
     count = int(sys.argv[2]) or 15
     
-    search = twitter.get_tweets(search, token, count)
-    tweets = search.get('statuses')
-    for tweet in tweets:
-        print('{} : {}'.format(tweet.get('id'), tweet.get('text')))
-        print('Hashtags : {}'.format(", ".join([tag['text'] for tag in tweet.get('entities').get('hashtags')])))
+    tweets = twitter.get_tweets(search, token, count)
+
+    #for tweet in tweets:
+    #    print('{} : {}'.format(tweet.get('id'), tweet.get('text')))
+    #    print('Hashtags : {}'.format(", ".join([tag['text'] for tag in tweet.get('entities').get('hashtags')])))
 
     print(collect_hashtags(tweets))
